@@ -37,7 +37,7 @@ class TestAccessNestedMap(unittest.TestCase):
             access_nested_map(nested_map, path)
         
         # Verify that the exception message matches the path that caused the KeyError
-        self.assertEqual(str(cm.exception), str(path))
+        self.assertEqual(str(cm.exception), repr(path))
 
 
 
