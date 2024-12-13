@@ -28,17 +28,15 @@ class TestAccessNestedMap(unittest.TestCase):
         ({}, ("a",)),  # Empty dictionary, key "a" not found
         ({"a": 1}, ("a", "b")),  # Key "b" not found under "a"
     ])
-
     def test_access_nested_map_exception(self, nested_map: dict, path: tuple) -> None:
         """
         Test that KeyError is raised when a path does not exist in the nested_map.
         """
         with self.assertRaises(KeyError) as cm:
             access_nested_map(nested_map, path)
-        
-        # Verify that the exception message matches the path that caused the KeyError
+  
+        # Verify the exception message matches the missing path
         self.assertEqual(str(cm.exception), repr(path))
-
 
 
 if __name__ == "__main__":
