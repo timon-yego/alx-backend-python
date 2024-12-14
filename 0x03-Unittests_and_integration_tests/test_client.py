@@ -4,7 +4,7 @@
 import unittest
 from unittest.mock import patch
 from parameterized import parameterized
-from client import GithubOrgClient  # Assuming the client module contains the GithubOrgClient class
+from client import GithubOrgClient
 
 class TestGithubOrgClient(unittest.TestCase):
 
@@ -76,5 +76,6 @@ class TestGithubOrgClient(unittest.TestCase):
             # Ensure that _public_repos_url was called once
             client._public_repos_url.assert_called_once()
 
+            
 if __name__ == '__main__':
     unittest.main()
