@@ -44,13 +44,12 @@ class TestGithubOrgClient(unittest.TestCase):
         # Call the _public_repos_url property
         result = client._public_repos_url
 
-        # Assert that the repos_url in the org payload is correctly used in the result
-        self.assertEqual(result, 
-                        "https://api.github.com/orgs/google/repos")
+        # Assert that the repos_url in the org payload
+        self.assertEqual(result, "https://api.github.com/orgs/google/repos")
 
     @patch('client.GithubOrgClient.get_json')
     def test_public_repos(self, mock_get_json):
-        # Define a payload for the mocked response of get_json (for public repos)
+        # Define a payload for the mocked response of get_json
         mock_get_json.return_value = [
             {"name": "repo1"},
             {"name": "repo2"},
@@ -60,7 +59,7 @@ class TestGithubOrgClient(unittest.TestCase):
         # Use patch as a context manager to mock the _public_repos_url property
         with patch('client.GithubOrgClient._public_repos_url',
                    return_value="https://api.github.com/orgs/google/repos"):
-            # Create an instance of GithubOrgClient with the 'google' organization
+            # Create an instance of GithubOrgClient
             client = GithubOrgClient("google")
 
             # Call the public_repos method
