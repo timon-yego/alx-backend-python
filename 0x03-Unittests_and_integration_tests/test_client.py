@@ -4,31 +4,30 @@
 import unittest
 from unittest.mock import patch
 from parameterized import parameterized
-from client import GithubOrgClient
-
+from client import GithubOrgClient  # Assuming the client module contains the GithubOrgClient class
 
 class TestGithubOrgClient(unittest.TestCase):
-    """Test suite for GithubOrgClient."""
-
+    
     @parameterized.expand([
-        ("google", {"login": "google"}),
-        ("abc", {"login": "abc"}),
+        ("google",),
+        ("abc",)
     ])
-    @patch('client.get_json', return_value={"login": "google"})
-    def test_org(self, org_name, expected, mock_get_json):
-        """
-        Test that GithubOrgClient.org returns the correct value.
+    @patch('client.GithubOrgClient.get_json')
+    def test_org(self, org, mock_get_json):
+        # Mock the response of get_json
+        mock_get_json.return_value = {"org": org}
+        
+        # Create an instance of GithubOrgClient
+        client = GithubOrgClient(org)
+        
+        # Call the org method
+        result = client.org()
+        
+        # Check that get_json was called once with the correct argument
+        mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org}")
+        
+        # Check that the result is as expected
+        self.assertEqual(result, {"org": org})
 
-        Ensures that the get_json method is called once
-        with the expected URL and that the returned value
-        matches the mock data.
-        """
-        client = GithubOrgClient(org_name)
-        self.assertEqual(client.org, expected)
-        mock_get_json.assert_called_once_with(
-            f"https://api.github.com/orgs/{org_name}"
-        )
-
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     unittest.main()
