@@ -53,9 +53,9 @@ class TestGithubOrgClient(unittest.TestCase):
 
         # Verify that get_json was called once
         mock_get_json.assert_called_once_with(
-                                        "https://api.github.com/orgs/google/repos")
+                                "https://api.github.com/orgs/google/repos")
 
-    @patch('client.GithubOrgClient.get_json') 
+    @patch('client.GithubOrgClient.get_json')
     @patch('client.GithubOrgClient._public_repos_url')
     def test_public_repos(self, mock_public_repos_url, mock_get_json):
         """
@@ -76,17 +76,18 @@ class TestGithubOrgClient(unittest.TestCase):
 
         # Assert that mocked property and mocked get_json were called once
         mock_public_repos_url.assert_called_once()
-        mock_get_json.assert_called_once_with("https://api.github.com/orgs/google/repos")
+        mock_get_json.assert_called_once_with(
+                            "https://api.github.com/orgs/google/repos")
 
-    @patch('client.GithubOrgClient.get_json')  
-    @patch('client.GithubOrgClient._public_repos_url')  # Mocking the _public_repos_url property
+    @patch('client.GithubOrgClient.get_json')
+    @patch('client.GithubOrgClient._public_repos_url')
     def test_public_repos_url(self, mock_public_repos_url, mock_get_json):
         """
         Test the _public_repos_url method of GithubOrgClient.
         """
         # Define a sample payload
         mock_get_json.return_value = {"repos_url": 
-                                      "https://api.github.com/orgs/google/repos"}
+                                    "https://api.github.com/orgs/google/repos"}
         mock_public_repos_url.return_value = "https://api.github.com/orgs/google/repos"
 
         # Create an instance of GithubOrgClient
@@ -96,9 +97,10 @@ class TestGithubOrgClient(unittest.TestCase):
         result = client._public_repos_url
         self.assertEqual(result, "https://api.github.com/orgs/google/repos")
 
-        # Assert that mocked property and the mocked get_json were both called once
+        # Assert mocked property and mocked get_json were called once
         mock_public_repos_url.assert_called_once()
-        mock_get_json.assert_called_once_with("https://api.github.com/orgs/google/repos")
+        mock_get_json.assert_called_once_with(
+                                        "https://api.github.com/orgs/google/repos")
 
 
 if __name__ == '__main__':
