@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """Unit tests for client.GithubOrgClient."""
-
 import unittest
 from unittest.mock import patch
 from parameterized import parameterized
-from client import GithubOrgClient
+from client import GithubOrgClient  # Assuming the client module contains the GithubOrgClient class
+
 
 class TestGithubOrgClient(unittest.TestCase):
-
 
     @parameterized.expand([
         ("google",),
@@ -77,6 +76,6 @@ class TestGithubOrgClient(unittest.TestCase):
             # Ensure that _public_repos_url was called once
             client._public_repos_url.assert_called_once()
 
-            
+
 if __name__ == '__main__':
     unittest.main()
