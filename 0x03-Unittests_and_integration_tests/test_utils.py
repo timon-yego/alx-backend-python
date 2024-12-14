@@ -70,7 +70,7 @@ class TestMemoize(unittest.TestCase):
         test_instance = TestClass()
 
         with patch.object(
-        test_instance, 'a_method', return_value=42
+            test_instance, 'a_method', return_value=42
         ) as mock_method:
             result_1 = test_instance.a_property
             result_2 = test_instance.a_property
