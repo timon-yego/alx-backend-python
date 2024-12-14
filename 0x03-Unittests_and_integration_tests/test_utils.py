@@ -78,6 +78,5 @@ class TestMemoize(unittest.TestCase):
             self.assertEqual(result_2, 42)
 
 
-        
 if __name__ == "__main__":
     unittest.main()
