@@ -32,7 +32,6 @@ class TestGithubOrgClient(unittest.TestCase):
         ({"license": {"key": "my_license"}}, "my_license", True),
         ({"license": {"key": "other_license"}}, "my_license", False),
     ])
-
     @patch('client.GithubOrgClient.get_json')
     def test_has_license(self, repo, license_key,
                          expected_result, mock_get_json):
@@ -90,7 +89,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         # Define a sample payload
         mock_get_json.return_value = {"repos_url":
-                                      "https://api.github.com/orgs/google/repos"}
+            "https://api.github.com/orgs/google/repos"}
         mock_public_repos_url.return_value = (
             "https://api.github.com/orgs/google/repos"
         )
