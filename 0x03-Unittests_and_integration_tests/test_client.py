@@ -32,7 +32,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ({"license": {"key": "my_license"}}, "my_license", True),
         ({"license": {"key": "other_license"}}, "my_license", False),
     ])
-     # Mocking the get_json method
+
     @patch('client.GithubOrgClient.get_json')
     def test_has_license(self, repo, license_key, expected_result, mock_get_json):
         """
@@ -52,10 +52,11 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(result, expected_result)
 
         # Verify that get_json was called once
-        mock_get_json.assert_called_once_with("https://api.github.com/orgs/google/repos")
+        mock_get_json.assert_called_once_with(
+                                        "https://api.github.com/orgs/google/repos")
 
-    @patch('client.GithubOrgClient.get_json')  
-    @patch('client.GithubOrgClient._public_repos_url')  # Mocking the _public_repos_url property
+    @patch('client.GithubOrgClient.get_json') 
+    @patch('client.GithubOrgClient._public_repos_url')
     def test_public_repos(self, mock_public_repos_url, mock_get_json):
         """
         Test the public_repos method of GithubOrgClient.
