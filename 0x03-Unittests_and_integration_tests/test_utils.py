@@ -39,17 +39,14 @@ class TestGetJson(unittest.TestCase):
     @patch("utils.requests.get")
     def test_get_json(self, test_url, test_payload, mock_get):
         """Test get_json with mocked requests.get."""
-        # Configure the mock to return the test payload
         mock_response = MagicMock()
         mock_response.json.return_value = test_payload
         mock_get.return_value = mock_response
 
-        # Call the function with the test URL
         result = get_json(test_url)
 
-        # Assertions
-        mock_get.assert_called_once_with(test_url)  # Ensure get() was called once with the test URL
-        self.assertEqual(result, test_payload)     # Ensure the result matches the test payload
+        mock_get.assert_called_once_with(test_url)
+        self.assertEqual(result, test_payload)
 
 
 class TestMemoize(unittest.TestCase):
@@ -70,21 +67,16 @@ class TestMemoize(unittest.TestCase):
                 """Memoized property."""
                 return self.a_method()
 
-        # Create an instance of TestClass
         test_instance = TestClass()
 
-        # Patch the a_method of the instance
         with patch.object(test_instance, 'a_method', return_value=42) as mock_method:
-            # Call the memoized property twice
             result_1 = test_instance.a_property
             result_2 = test_instance.a_property
 
-            # Assert that a_method was only called once
             mock_method.assert_called_once()
-
-            # Assert that the property returns the correct result
             self.assertEqual(result_1, 42)
             self.assertEqual(result_2, 42)
+
 
         
 if __name__ == "__main__":
