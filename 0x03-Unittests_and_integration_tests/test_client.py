@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import patch
 from parameterized import parameterized
-from client import GithubOrgClient  # Assuming the client module contains the GithubOrgClient class
+from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -45,7 +45,8 @@ class TestGithubOrgClient(unittest.TestCase):
         result = client._public_repos_url
 
         # Assert that the repos_url in the org payload is correctly used in the result
-        self.assertEqual(result, "https://api.github.com/orgs/google/repos")
+        self.assertEqual(result, 
+                        "https://api.github.com/orgs/google/repos")
 
     @patch('client.GithubOrgClient.get_json')
     def test_public_repos(self, mock_get_json):
