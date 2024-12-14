@@ -90,7 +90,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """
         # Define a sample payload
         mock_get_json.return_value = {"repos_url":
-                    "https://api.github.com/orgs/google/repos"}
+                                      "https://api.github.com/orgs/google/repos"}
         mock_public_repos_url.return_value = (
             "https://api.github.com/orgs/google/repos"
         )
