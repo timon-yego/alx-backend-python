@@ -2,7 +2,7 @@
 """Unit tests for utils functions."""
 import unittest
 from parameterized import parameterized
-from utils import access_nested_map, get_json
+from utils import access_nested_map, get_json, memoize
 from unittest.mock import patch, MagicMock
 
 
@@ -50,6 +50,41 @@ class TestGetJson(unittest.TestCase):
         # Assertions
         mock_get.assert_called_once_with(test_url)  # Ensure get() was called once with the test URL
         self.assertEqual(result, test_payload)     # Ensure the result matches the test payload
+
+
+class TestMemoize(unittest.TestCase):
+    """Test suite for the memoize decorator."""
+
+    def test_memoize(self):
+        """Test memoize caches a property correctly."""
+
+        class TestClass:
+            """Class with a method and a memoized property."""
+
+            def a_method(self):
+                """Method to be mocked."""
+                return 42
+
+            @memoize
+            def a_property(self):
+                """Memoized property."""
+                return self.a_method()
+
+        # Create an instance of TestClass
+        test_instance = TestClass()
+
+        # Patch the a_method of the instance
+        with patch.object(test_instance, 'a_method', return_value=42) as mock_method:
+            # Call the memoized property twice
+            result_1 = test_instance.a_property
+            result_2 = test_instance.a_property
+
+            # Assert that a_method was only called once
+            mock_method.assert_called_once()
+
+            # Assert that the property returns the correct result
+            self.assertEqual(result_1, 42)
+            self.assertEqual(result_2, 42)
 
         
 if __name__ == "__main__":
