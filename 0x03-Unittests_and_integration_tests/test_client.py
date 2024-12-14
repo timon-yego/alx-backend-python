@@ -42,6 +42,32 @@ class TestGithubOrgClient(unittest.TestCase):
         
         # Assert that the repos_url in the org payload is correctly used in the result
         self.assertEqual(result, "https://api.github.com/orgs/google/repos")
+    
+    @patch('client.GithubOrgClient.get_json')
+    def test_public_repos(self, mock_get_json):
+        # Define a payload for the mocked response of get_json (for public repos)
+        mock_get_json.return_value = [
+            {"name": "repo1"},
+            {"name": "repo2"},
+            {"name": "repo3"}
+        ]
+        
+        # Use patch as a context manager to mock the _public_repos_url property
+        with patch('client.GithubOrgClient._public_repos_url', return_value="https://api.github.com/orgs/google/repos"):
+            # Create an instance of GithubOrgClient with the 'google' organization
+            client = GithubOrgClient("google")
+            
+            # Call the public_repos method
+            repos = client.public_repos()
+            
+            # Assert that the repos list matches the expected list
+            self.assertEqual(repos, ["repo1", "repo2", "repo3"])
+            
+            # Ensure that get_json was called once with the mocked URL
+            mock_get_json.assert_called_once_with("https://api.github.com/orgs/google/repos")
+            
+            # Ensure that _public_repos_url was called once
+            client._public_repos_url.assert_called_once()
 
 if __name__ == '__main__':
     unittest.main()
