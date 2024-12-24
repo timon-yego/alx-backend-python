@@ -22,6 +22,23 @@ class User(AbstractUser):
 
     def check_password(self, raw_password):
         return super().check_password(raw_password)
+    
+    # Custom related names to avoid clashes with the default auth User model
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name='chats_user_set',  # Custom related_name to avoid conflict
+        blank=True,
+        help_text='The groups this user belongs to.',
+        verbose_name='groups'
+    )
+
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name='chats_user_permissions_set',  # Custom related_name to avoid conflict
+        blank=True,
+        help_text='Specific permissions for this user.',
+        verbose_name='user permissions'
+    )
 
 
     def __str__(self):
