@@ -17,11 +17,15 @@ class User(AbstractUser):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='guest')
     created_at = models.DateTimeField(auto_now_add=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
+    def set_password(self, raw_password):
+        super().set_password(raw_password)
+
+    def check_password(self, raw_password):
+        return super().check_password(raw_password)
+
 
     def __str__(self):
-        return self.email
+        return f"{self.first_name} {self.last_name} ({self.role})"
 
 class Conversation(models.Model):
     conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
