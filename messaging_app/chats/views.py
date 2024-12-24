@@ -1,18 +1,21 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer
 
-# Create your views here.
+
 class ConversationViewSet(viewsets.ModelViewSet):
     """
     ViewSet for managing Conversations.
     """
     queryset = Conversation.objects.prefetch_related('participants', 'messages').all()
     serializer_class = ConversationSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['participants__first_name', 'participants__last_name']
+    ordering_fields = ['created_at']
 
     @action(detail=False, methods=['post'], url_path='create-conversation')
     def create_conversation(self, request):
@@ -46,6 +49,9 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     queryset = Message.objects.select_related('sender', 'conversation').all()
     serializer_class = MessageSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['message_body', 'sender__first_name', 'sender__last_name']
+    ordering_fields = ['sent_at']
 
     def create(self, request, *args, **kwargs):
         """
