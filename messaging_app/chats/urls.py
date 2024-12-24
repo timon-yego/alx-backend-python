@@ -9,6 +9,6 @@ conversation_router = NestedDefaultRouter(router, 'conversations', lookup='conve
 conversation_router.register('messages', MessageViewSet, basename='conversation-messages')
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
     path('', include(conversation_router.urls)),
 ]
