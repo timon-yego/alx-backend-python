@@ -5,7 +5,8 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer
-
+from rest_framework.permissions import IsAuthenticated
+from .permissions import IsOwnerOrParticipant
 
 class ConversationViewSet(viewsets.ModelViewSet):
     """
@@ -16,6 +17,14 @@ class ConversationViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['participants__first_name', 'participants__last_name']
     ordering_fields = ['created_at']
+    permission_classes = [IsAuthenticated, IsOwnerOrParticipant]
+
+    def get_queryset(self):
+        """
+        Restrict conversations to those where the requesting user is a participant.
+        """
+        return Conversation.objects.filter(participants=self.request.user)
+
 
     @action(detail=False, methods=['post'], url_path='create-conversation')
     def create_conversation(self, request):
@@ -52,6 +61,13 @@ class MessageViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['message_body', 'sender__first_name', 'sender__last_name']
     ordering_fields = ['sent_at']
+    permission_classes = [IsAuthenticated, IsOwnerOrParticipant]
+
+    def get_queryset(self):
+        """
+        Restrict messages to those in conversations where the requesting user is a participant.
+        """
+        return Message.objects.filter(conversation__participants=self.request.user)
 
     def create(self, request, *args, **kwargs):
         """
