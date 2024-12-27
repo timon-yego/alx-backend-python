@@ -1,10 +1,13 @@
-from rest_framework.permissions import BasePermission
+from rest_framework.permissions import BasePermission, IsAuthenticated
 
-class IsOwnerOrParticipant(BasePermission):
+class IsParticipantOfConversation(BasePermission):
     """
-    Custom permission to ensure users can access only their own conversations.
+    Custom permission to only allow participants of a conversation to interact with its messages.
     """
-
     def has_object_permission(self, request, view, obj):
-        # Assuming obj has participants field listing users in the conversation
-        return request.user in obj.participants.all()
+        # Check if the user is authenticated
+        if not request.user.is_authenticated:
+            return False
+
+        # Allow access if the user is a participant in the conversation
+        return request.user in obj.conversation.participants.all()

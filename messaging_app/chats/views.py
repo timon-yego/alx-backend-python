@@ -7,6 +7,7 @@ from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer
 from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwnerOrParticipant
+from .permissions import IsParticipantOfConversation
 
 class ConversationViewSet(viewsets.ModelViewSet):
     """
@@ -61,13 +62,11 @@ class MessageViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['message_body', 'sender__first_name', 'sender__last_name']
     ordering_fields = ['sent_at']
-    permission_classes = [IsAuthenticated, IsOwnerOrParticipant]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
 
     def get_queryset(self):
-        """
-        Restrict messages to those in conversations where the requesting user is a participant.
-        """
-        return Message.objects.filter(conversation__participants=self.request.user)
+        # Allow users to see only messages from conversations they are part of
+        return self.queryset.filter(conversation__participants=self.request.user)
 
     def create(self, request, *args, **kwargs):
         """
