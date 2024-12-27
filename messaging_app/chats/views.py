@@ -9,6 +9,10 @@ from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwnerOrParticipant
 from .permissions import IsParticipantOfConversation
 
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.pagination import PageNumberPagination
+from .filters import MessageFilter
+
 class ConversationViewSet(viewsets.ModelViewSet):
     """
     ViewSet for managing Conversations.
@@ -52,6 +56,8 @@ class ConversationViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(conversation)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
+class MessagePagination(PageNumberPagination):
+    page_size = 20  # Number of messages per page
 
 class MessageViewSet(viewsets.ModelViewSet):
     """

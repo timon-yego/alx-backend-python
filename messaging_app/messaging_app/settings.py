@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'chats',
     'rest_framework_simplejwt',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -134,4 +135,6 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',  # Session-based authentication
         'rest_framework.authentication.BasicAuthentication',    # Optional: Basic Authentication
     ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,  # Fetch 20 messages per page
 }
