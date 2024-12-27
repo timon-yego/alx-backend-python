@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404
 from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer
 from rest_framework.permissions import IsAuthenticated
-from .permissions import IsOwnerOrParticipant
 from .permissions import IsParticipantOfConversation
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -22,7 +21,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['participants__first_name', 'participants__last_name']
     ordering_fields = ['created_at']
-    permission_classes = [IsAuthenticated, IsOwnerOrParticipant]
+    permission_classes = [IsAuthenticated, IsParticipantOfConversation]
 
     def get_queryset(self):
         """
