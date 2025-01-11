@@ -19,13 +19,18 @@ class MessageNotificationTest(TestCase):
 
 class MessageEditTest(TestCase):
     def setUp(self):
-        self.user1 = User.objects.create_user(username='user1', password='password')
-        self.user2 = User.objects.create_user(username='user2', password='password')
-        self.message = Message.objects.create(sender=self.user1, receiver=self.user2, content="Original message")
+        self.sender = User.objects.create_user(username="sender", password="password")
+        self.receiver = User.objects.create_user(username="receiver", password="password")
+        self.editor = User.objects.create_user(username="editor", password="password")
+        self.message = Message.objects.create(sender=self.sender, receiver=self.receiver, content="Original content")
 
-    def test_message_edit_creates_history(self):
-        self.message.content = "Edited message"
+    def test_message_edit_logs_history_and_editor(self):
+        self.message.content = "Updated content"
+        self.message.edited_by = self.editor
         self.message.save()
+
         history = MessageHistory.objects.filter(message=self.message)
         self.assertEqual(history.count(), 1)
-        self.assertEqual(history.first().old_content, "Original message")
+        self.assertEqual(history.first().old_content, "Original content")
+        self.assertTrue(self.message.edited)
+        self.assertEqual(self.message.edited_by, self.editor)
