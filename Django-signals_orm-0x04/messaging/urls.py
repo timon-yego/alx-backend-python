@@ -7,6 +7,6 @@ router = DefaultRouter()
 router.register(r'messages', MessageViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),  # Automatically includes the routes for the views
-    path('unread/', UnreadMessagesView.as_view(), name='unread-messages'),  # For unread messages
+    path('', include(router.urls)),  
+    path('unread/', UnreadMessagesView.as_view(), name='unread-messages'), 
 ]
