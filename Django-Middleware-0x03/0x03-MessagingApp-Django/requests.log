@@ -19,3 +19,5 @@ C:\Users\Timothy\alx\alx-backend-python\Django-Middleware-0x03\0x03-MessagingApp
 2025-01-11 20:33:39.230631 - User: Anonymous - Path: /api-auth/login/
 Forbidden: /api-auth/login/
 C:\Users\Timothy\alx\alx-backend-python\Django-Middleware-0x03\0x03-MessagingApp-Django\messaging_app\settings.py changed, reloading.
+C:\Users\Timothy\alx\alx-backend-python\Django-Middleware-0x03\0x03-MessagingApp-Django\chats\middleware.py changed, reloading.
+C:\Users\Timothy\alx\alx-backend-python\Django-Middleware-0x03\0x03-MessagingApp-Django\messaging_app\settings.py changed, reloading.
