@@ -50,3 +50,21 @@ class UserDeletionTest(TestCase):
         self.user2.delete()
         self.assertEqual(Message.objects.filter(receiver=self.user2).count(), 0)
         self.assertEqual(Notification.objects.filter(user=self.user2).count(), 0)
+
+class ThreadedConversationTest(TestCase):
+    def setUp(self):
+        self.user1 = User.objects.create_user(username="user1", password="password")
+        self.user2 = User.objects.create_user(username="user2", password="password")
+        self.user3 = User.objects.create_user(username="user3", password="password")
+
+        self.message1 = Message.objects.create(sender=self.user1, receiver=self.user2, content="Hello!")
+        self.reply1 = Message.objects.create(
+            sender=self.user2, receiver=self.user1, content="Hi!", parent_message=self.message1
+        )
+        self.reply2 = Message.objects.create(
+            sender=self.user1, receiver=self.user2, content="How are you?", parent_message=self.reply1
+        )
+    def test_recursive_replies(self):
+        replies = self.message1.get_all_replies()
+        self.assertIn(self.reply1, replies)
+        self.assertIn(self.reply2, replies)

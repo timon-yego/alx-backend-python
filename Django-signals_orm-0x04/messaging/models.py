@@ -11,9 +11,27 @@ class Message(models.Model):
     edited_by = models.ForeignKey(
         User, related_name="edited_messages", null=True, blank=True, on_delete=models.SET_NULL
     )
+    parent_message = models.ForeignKey(
+        'self', null=True, blank=True, related_name="replies", on_delete=models.CASCADE
+    )  # Self-referential field for replies
 
     def __str__(self):
         return f"Message from {self.sender} to {self.receiver} at {self.timestamp}"
+    
+    def get_all_replies(self):
+        """
+        Recursively fetch all replies to this message.
+        """
+        all_replies = []
+
+        def fetch_replies(message):
+            replies = message.replies.all().select_related("sender", "receiver").prefetch_related("replies")
+            for reply in replies:
+                all_replies.append(reply)
+                fetch_replies(reply)
+
+        fetch_replies(self)
+        return all_replies
 
 class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
