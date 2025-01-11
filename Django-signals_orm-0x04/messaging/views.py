@@ -10,11 +10,19 @@ def delete_user(request):
     user.delete()  # Triggers the post_delete signal
     return redirect("logout")  # Redirect to the logout page or a suitable location
 
-def threaded_conversation(request):
-    # Fetch top-level messages (no parent)
-    top_level_messages = Message.objects.filter(parent_message__isnull=True).select_related(
-        "sender", "receiver"
-    ).prefetch_related("replies")
+def message_thread(request, message_id):
+    # Use select_related for foreign key fields and prefetch_related for replies
+    message = Message.objects.filter(id=message_id).select_related('sender', 'receiver').prefetch_related('replies').first()
 
-    context = {"messages": top_level_messages}
-    return render(request, "messaging/threaded_conversation.html", context)
+    if not message:
+        return render(request, 'messaging/error.html', {'message': 'Message not found'})
+
+    # Recursive query to get all replies, including nested replies
+    def get_replies(message):
+        replies = message.replies.all()
+        for reply in replies:
+            reply.replies = get_replies(reply)  # Recursively fetch replies
+        return replies
+    replies = get_replies(message)
+    
+    return render(request, 'messaging/message_thread.html', {'message': message, 'replies': replies})
