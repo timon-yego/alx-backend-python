@@ -3,7 +3,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .models import Message
 from .forms import MessageForm
-
+from rest_framework import generics
+from .serializers import MessageSerializer
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 @login_required
@@ -55,3 +57,11 @@ def send_message(request):
 
     return render(request, "messaging/send_message.html", {"form": form})
 
+
+class UnreadMessagesView(generics.ListAPIView):
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # Use the custom manager to filter unread messages for the logged-in user
+        return Message.unread_objects.for_user(self.request.user)
