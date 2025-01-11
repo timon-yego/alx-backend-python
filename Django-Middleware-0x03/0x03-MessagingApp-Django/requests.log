@@ -1,0 +1,15 @@
+2025-01-11 19:51:17.545924 - User: Anonymous - Path: /
+Not Found: /
+2025-01-11 19:51:24.397003 - User: Anonymous - Path: /favicon.ico
+Not Found: /favicon.ico
+2025-01-11 19:51:39.174545 - User: Anonymous - Path: /api
+2025-01-11 19:51:39.206527 - User: Anonymous - Path: /api/
+Forbidden: /api/
+2025-01-11 19:51:54.615706 - User: Anonymous - Path: /admin
+2025-01-11 19:51:54.637694 - User: Anonymous - Path: /admin/
+2025-01-11 19:51:54.655685 - User: Anonymous - Path: /admin/login/
+2025-01-11 19:53:15.927558 - User: Anonymous - Path: /
+Not Found: /
+2025-01-11 19:53:34.790171 - User: Anonymous - Path: /api-auth/
+Not Found: /api-auth/
+2025-01-11 19:53:51.070014 - User: Anonymous - Path: /api-auth/login/
