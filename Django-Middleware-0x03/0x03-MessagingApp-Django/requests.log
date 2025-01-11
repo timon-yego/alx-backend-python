@@ -13,3 +13,9 @@ Not Found: /
 2025-01-11 19:53:34.790171 - User: Anonymous - Path: /api-auth/
 Not Found: /api-auth/
 2025-01-11 19:53:51.070014 - User: Anonymous - Path: /api-auth/login/
+C:\Users\Timothy\alx\alx-backend-python\Django-Middleware-0x03\0x03-MessagingApp-Django\chats\middleware.py changed, reloading.
+C:\Users\Timothy\alx\alx-backend-python\Django-Middleware-0x03\0x03-MessagingApp-Django\chats\middleware.py changed, reloading.
+C:\Users\Timothy\alx\alx-backend-python\Django-Middleware-0x03\0x03-MessagingApp-Django\messaging_app\settings.py changed, reloading.
+2025-01-11 20:33:39.230631 - User: Anonymous - Path: /api-auth/login/
+Forbidden: /api-auth/login/
+C:\Users\Timothy\alx\alx-backend-python\Django-Middleware-0x03\0x03-MessagingApp-Django\messaging_app\settings.py changed, reloading.
