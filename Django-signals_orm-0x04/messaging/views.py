@@ -65,6 +65,6 @@ class UnreadMessagesView(APIView):
     def get(self, request):
         user = request.user
         # Using the custom manager with .only() to optimize the query
-        unread_messages = Message.unread.for_user(user).only('id', 'sender', 'receiver', 'content', 'timestamp')
+        unread_messages = Message.unread.unread_for_user(user).only('id', 'sender', 'receiver', 'content', 'timestamp')
         serializer = MessageSerializer(unread_messages, many=True)
         return Response(serializer.data)
