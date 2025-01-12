@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import MessageSerializer
 from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.cache import cache_page
 
 # Create your views here.
 @login_required
@@ -15,6 +16,7 @@ def delete_user(request):
     user.delete()  # Triggers the post_delete signal
     return redirect("logout")  # Redirect to the logout page or a suitable location
 
+@cache_page(60)
 def threaded_conversation(request):
     """
     Fetch and display all top-level messages (parent_message is NULL) 
