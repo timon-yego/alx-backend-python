@@ -88,7 +88,7 @@ class OffensiveLanguageMiddleware:
             ip = request.META.get("REMOTE_ADDR")
         return ip
     
-class RolepermissionMiddleware:
+class RolePermissionMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
