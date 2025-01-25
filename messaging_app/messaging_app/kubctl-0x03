@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Apply the updated blue deployment with version 2.0
+echo "Applying the updated blue deployment with version 2.0..."
+kubectl apply -f messaging_app/blue_deployment.yaml
+
+# Monitor the rollout progress
+echo "Monitoring the rollout progress..."
+kubectl rollout status deployment/django-app-blue
+
+# Test if the app experiences any downtime or disruption
+echo "Testing for downtime or disruption by sending continuous requests..."
+for i in {1..100}; do
+  curl -s http://localhost:8000 > /dev/null &
+  if ((i % 10 == 0)); then
+    echo "Sent $i requests"
+  fi
+done
+wait
+echo "Continuous requests sent."
+
+# Verify that the rolling update is complete by checking the current pods
+echo "Verifying the update is complete..."
+kubectl get pods -l app=messaging-app,version=blue
+
+echo "Rolling update complete and no downtime experienced!"

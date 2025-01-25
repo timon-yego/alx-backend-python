@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: messaging-app
-        image: <your-dockerhub-username>/messaging-app:blue
+        image: <your-dockerhub-username>/messaging-app:2.0  # Updated version to 2.0
         ports:
         - containerPort: 8000
         env:
