@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'messaging-app'
-        DOCKER_REGISTRY = 'timon-yego'
+        GIT_CREDENTIALS = 'timon-yego'  // Name of the GitHub credentials added in Jenkins
+        DOCKER_CREDENTIALS = 'timo771'  // Docker Hub credentials for pushing images
+        IMAGE_NAME = 'timo771/messaging-app'  // Docker image name (replace with your Docker Hub username)
     }
 
     stages {
@@ -41,6 +42,27 @@ pipeline {
                 script {
                     // Generate a pytest report in XML format
                     sh 'pytest --maxfail=5 --disable-warnings -q --junitxml=pytest-report.xml'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Build the Docker image using the Dockerfile in the messaging_app directory
+                    sh 'docker build -t ${IMAGE_NAME}:${BUILD_ID} messaging_app/'
+                }
+            }
+        }
+
+        stage('Push Docker Image to Docker Hub') {
+            steps {
+                script {
+                    // Login to Docker Hub and push the Docker image
+                    withCredentials([usernamePassword(credentialsId: "${env.DOCKER_CREDENTIALS}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                        sh 'docker push ${IMAGE_NAME}:${BUILD_ID}'
+                    }
                 }
             }
         }
