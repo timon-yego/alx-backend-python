@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_CREDENTIALS = 'github-credentials'  // Name of the GitHub credentials added in Jenkins
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git credentialsId: "${env.GIT_CREDENTIALS}", url: 'https://github.com/yourusername/alx-backend-python.git', branch: 'main'
+            }
+        }
+
+        stage('Set up Python') {
+            steps {
+                script {
+                    // Install dependencies using virtual environment
+                    sh 'python3 -m venv venv'
+                    sh 'source venv/bin/activate'
+                    sh 'pip install -r messaging_app/requirements.txt'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                script {
+                    // Run pytest and generate test report
+                    sh 'source venv/bin/activate'
+                    sh 'pytest --maxfail=1 --disable-warnings -q > result.log || true'
+                    sh 'tail -n 10 result.log'  // Display last 10 lines of result
+                }
+            }
+        }
+
+        stage('Generate Test Report') {
+            steps {
+                script {
+                    // Assuming pytest generates a report in XML format (pytest plugins for XML report might be needed)
+                    sh 'pytest --maxfail=5 --disable-warnings -q --junitxml=pytest-report.xml'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Archive the test report for future reference
+            archiveArtifacts artifacts: '**/pytest-report.xml', allowEmptyArchive: true
+        }
+
+        success {
+            echo "Tests passed successfully!"
+        }
+
+        failure {
+            echo "Tests failed!"
+        }
+    }
+}
