@@ -1,0 +1,58 @@
+name: Django CI
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow for pushes to the main branch (adjust as needed)
+  pull_request:
+    branches:
+      - main  # Trigger the workflow for pull requests targeting the main branch (adjust as needed)
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+
+    services:
+      mysql:
+        image: mysql:5.7  # Use MySQL 5.7 for database service
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword  # Set the root password for MySQL
+          MYSQL_DATABASE: test_db  # Name of the database for testing
+        ports:
+          - 3306:3306  # Expose MySQL on port 3306
+        options: >-
+          --health-cmd="mysqladmin --user=root --password=rootpassword ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      # Checkout the code from GitHub
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Python
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'  # You can change the version if needed
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install --upgrade pip
+          pip install -r messaging_app/requirements.txt
+
+      # Set up the MySQL database connection (required for Django to run tests)
+      - name: Set up MySQL database
+        run: |
+          source venv/bin/activate
+          python messaging_app/manage.py migrate  # Apply migrations
+
+      # Run tests using pytest (you can use `pytest` or `django-admin test`)
+      - name: Run Django tests
+        run: |
+          source venv/bin/activate
+          pytest messaging_app/tests --maxfail=1 --disable-warnings -q
