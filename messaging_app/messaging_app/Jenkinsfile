@@ -2,14 +2,15 @@ pipeline {
     agent any
 
     environment {
-        GIT_CREDENTIALS = 'github-credentials'  // Name of the GitHub credentials added in Jenkins
+        DOCKER_IMAGE = 'messaging-app'
+        DOCKER_REGISTRY = 'timon-yego'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
                 // Checkout the specified branch from GitHub repository
-                git credentialsId: "${env.GIT_CREDENTIALS}", url: 'https://github.com/yourusername/alx-backend-python.git', branch: 'main'
+               git branch: 'main', git credentialsId: "${env.GIT_CREDENTIALS}", url: 'https://github.com/timon-yego/alx-backend-python.git'
             }
         }
 
