@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Deploy the blue version
+echo "Deploying the blue version..."
+kubectl apply -f messaging_app/blue_deployment.yaml
+
+# Verify the blue deployment
+echo "Verifying the blue deployment..."
+kubectl get pods -l app=messaging-app,version=blue
+
+# Deploy the green version
+echo "Deploying the green version..."
+kubectl apply -f messaging_app/green_deployment.yaml
+
+# Verify the green deployment
+echo "Verifying the green deployment..."
+kubectl get pods -l app=messaging-app,version=green
+
+# Switch traffic to the green version
+echo "Switching traffic to the green version..."
+kubectl patch service messaging-app-service -p '{"spec":{"selector":{"app":"messaging-app","version":"green"}}}'
+
+# Monitor logs for the green deployment
+echo "Checking logs for the green deployment pods..."
+for pod in $(kubectl get pods -l app=messaging-app,version=green -o jsonpath="{.items[*].metadata.name}"); do
+  kubectl logs $pod
+done
+
+# Optional: Roll back to blue if there are errors
+echo "Monitoring for errors. Press Ctrl+C to exit if everything works correctly."
+read -p "Press Enter to roll back to the blue version or Ctrl+C to keep the green version running..."
+
+echo "Rolling back to the blue version..."
+kubectl patch service messaging-app-service -p '{"spec":{"selector":{"app":"messaging-app","version":"blue"}}}'
+
+echo "Blue-Green Deployment process completed!"

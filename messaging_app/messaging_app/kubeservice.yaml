@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: messaging-app-service
+spec:
+  selector:
+    app: messaging-app
+    version: blue  # Initially targeting blue deployment
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
