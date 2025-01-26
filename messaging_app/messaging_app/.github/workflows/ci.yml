@@ -44,6 +44,15 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r messaging_app/requirements.txt
+          pip install flake8 coverage pytest pytest-cov     # Install code quality and coverage tools
+
+      # Run Flake8 linting
+      - name: Run Flake8 linting
+        run: |
+          source venv/bin/activate
+          flake8 messaging_app/ --max-line-length=79
+        # Fail the build if linting errors are detected
+        continue-on-error: false
 
       # Set up the MySQL database connection (required for Django to run tests)
       - name: Set up MySQL database
@@ -51,8 +60,15 @@ jobs:
           source venv/bin/activate
           python messaging_app/manage.py migrate  # Apply migrations
 
-      # Run tests using pytest (you can use `pytest` or `django-admin test`)
-      - name: Run Django tests
-        run: |
-          source venv/bin/activate
-          pytest messaging_app/tests --maxfail=1 --disable-warnings -q
+      # Run tests and collect coverage
+      - name: Run Django tests with coverage
+       run: |
+         source venv/bin/activate
+         pytest --cov=messaging_app --cov-report=xml --cov-report=term messaging_app/tests
+
+      # Upload coverage report
+      - name: Upload coverage report
+       uses: actions/upload-artifact@v3
+       with:
+         name: coverage-report
+         path: coverage.xml
